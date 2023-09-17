@@ -1,0 +1,51 @@
+@use '../base/mixins' as m;
+@use '../base/variables' as v;
+
+
+.video {
+
+    position: relative; //para posicionar un elemento dentro de otro
+    max-height: 70rem;
+    min-height: 40rem;
+    overflow: hidden; //permite que el reproductor de video tome el mismo tamaño del div
+
+    .overlay {
+        position: absolute; //para posicionar encima (div) overlay del (div) video
+        background: rgb(126, 2, 195);
+        background: linear-gradient(270deg, rgba(126, 2, 195, 0.5) 0%, rgba(255, 0, 110, 0.3) 100%);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; //con flex direction colum alinea hacia abajo y con row hacia a los lados
+    }
+
+    video {
+        //elemento video
+        width: auto;
+        display: block; //para que tome todo el tamaño (pasa igual con las imagenes)
+
+        @include m.tablet {
+            width: 100%;
+        }
+    }
+}
+
+.contenido-video {
+    z-index: 10; //para poder resaltar con el mouse el texto (para que se sobreponga)
+
+    h2 {
+        color: v.$blanco;
+        font-size: 7rem;
+        margin: 0;
+    }
+
+    p {
+        background-color: v.$rosa;
+        display: inline-block; //esto permite que no tome todo el espacio como bloque sino que solo hasta donde termina el parrafo
+        padding: 1rem 2rem;
+        color: v.$blanco;
+        font-weight: 700;
+        font-size: 2.4rem;
+    }
+}

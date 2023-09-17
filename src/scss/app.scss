@@ -1,5 +1,9 @@
-$rojo: red;
 
-body{
-    background-color: $rojo;
-}
+@use "base";
+@use "layout";
+
+
+//@forward "variables"; VA EN LOS ARCHIVOS INDEX DE CADA CARPETA QUE APUNTA A LOS DEMAS ARCHIVOS SASS
+// @use "base"; VA EN LOS ARCHIVOS PARA HACER EL LLAMADO DE UN ARCHIVOS AL CUAL NECESITAS ACCEDER YA SEA A VARIABLES ETC..
+
+
