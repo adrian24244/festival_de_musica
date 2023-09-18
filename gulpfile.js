@@ -6,6 +6,10 @@ const { src, dest, watch, parallel } = require("gulp"); //SRC PARA BUSCAR , DEST
 //DEPENDENCIAS CSS
 const sass = require("gulp-sass")(require("sass")); //importando la funcion sass para agregarla en el pipe
 const plumber = require("gulp-plumber")
+const autoprefixer = require("autoprefixer");
+const cssnano = require("cssnano");
+const postcss = require("gulp-postcss");
+const sourcemaps = require("gulp-sourcemaps");
 
 //DEPENDENCIAS IMAGENES
 const avif = require("gulp-avif");
@@ -13,11 +17,17 @@ const cache = require("gulp-cache"); //DEPENDENCIA QUE FUNCIONA CON LA DEPENDENC
 const imagemin = require("gulp-imagemin") // DEPENDENCIA PARA ALIGERAR IMAGENES 
 const webp = require("gulp-webp"); // DEPENDENCIA CONVERTIR A WEBP
 
+//DEPENDENCIAS JS
+const terser = require("gulp-terser-js")
+
 function css(done) {
     //PERIMERO BUSCA EL ARCHIO, LUEGO LO COMPILA (FUNCION SASS) Y LUEGO LO GUARDA EN LA RUTA DESTINO (BUILD/CSS)
     src("src/scss/**/*.scss") // DE ESTA MANERA VA BUSCANDO DE MANERA RECURSIVA EN TODAS LAS CARPETAS ARCHIVOS SASS MIENTRAS ESTEN EN LA CARPETA (src/scss)
+        .pipe(sourcemaps.init()) //INICIA SOURCE MAPS YA CON LA HOJA QUE TIENE QUE COMPILAR
         .pipe(plumber())
         .pipe(sass()) //compilarlo
+        .pipe(postcss([autoprefixer(), cssnano()])) // PARA MINIMIZAR EL CODIGO CSS
+        .pipe(sourcemaps.write(".")) //LA RUTA PARA GUARDARLO ES UN . PARA QUE LA GUARDE EN LA MISMA RUTA
         .pipe(dest("build/css")) //almacenarlo en el disco
     done();//callback avisa a gulp cuando llega al final
 }
@@ -54,9 +64,12 @@ function versionavif(done) {
 
 function javascript(done) {
     src("src/js/**/*.js")
-        .pipe(dest("build/js"))
+        .pipe(sourcemaps.init())
+        .pipe(terser())
+        .pipe(sourcemaps.write("."))
+        .pipe(dest("build/js"));
 
-        done();
+    done();
 }
 
 function dev(done) {
@@ -65,8 +78,8 @@ function dev(done) {
 
     done();
 }
-
-//exports.css = css; SE LLAMARIA A ESTA FUNCION PERO SIN EL ESCUCHADOR WATCH POR ESO MEJOR SE LLAMA AL WATCH Y EL LLAMA A ESTA FUNCION
+// SE LLAMARIA A ESTA FUNCION PERO SIN EL ESCUCHADOR WATCH POR ESO MEJOR SE LLAMA AL WATCH Y EL LLAMA A ESTA FUNCION
+exports.css = css;
 exports.js = javascript;
 // exports.imagenes = imagenes;
 // exports.versionwebp = versionwebp;
