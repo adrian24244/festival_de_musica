@@ -72,6 +72,17 @@ function javascript(done) {
     done();
 }
 
+/* crea build de producción: npx gulp prod */
+function prod(done){
+    src("build/**/*.*")
+        .pipe(dest("prod/build"));
+    src("video/**/*.*")
+        .pipe(dest("prod/video"));
+    src("index.html")
+        .pipe(dest("prod"));
+    done();
+}
+
 function dev(done) {
     watch("src/scss/**/*.scss", css); //   <------------<------------<-------------<-------------<----------------<--------------<------------
     watch("src/js/**/*.js", javascript);
@@ -84,4 +95,5 @@ exports.js = javascript;
 // exports.imagenes = imagenes;
 // exports.versionwebp = versionwebp;
 // exports.versionavif = versionavif;
+exports.prod = prod;
 exports.dev = parallel(imagenes, versionwebp, versionavif, javascript, dev);
